@@ -1,0 +1,8 @@
+*.pyc
+*.swp
+*.bak
+
+local_settings.py
+
+env
+
