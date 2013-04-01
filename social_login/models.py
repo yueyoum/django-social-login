@@ -1,23 +1,16 @@
 from django.db import models
 
-from social_login.utils import social_login_settings
-
+from .app_settings import SOCIAL_LOGIN_USER_MODEL, SOCIAL_LOGIN_UID_LENGTH
 
 
 class SocialUser(models.Model):
-    user = models.OneToOneField(
-        social_login_settings.SOCIAL_LOGIN_USER_MODEL,
-        related_name = 'social_user'
-    )
-    site_uid = models.CharField(
-        max_length=social_login_settings.SOCIAL_LOGIN_UID_LENGTH,
-    )
+    user = models.OneToOneField(SOCIAL_LOGIN_USER_MODEL, related_name='social_user')
+    site_uid = models.CharField(max_length=SOCIAL_LOGIN_UID_LENGTH)
     site_id = models.SmallIntegerField()
-    
     avatar = models.CharField(max_length=255, blank=True)
     
     class Meta:
-        unique_together = ('site_uid', 'site_id')
+        unique_together = (('site_uid', 'site_id'),)
         
         
     @classmethod
@@ -37,6 +30,12 @@ class SocialUser(models.Model):
     
     @classmethod
     def get_user(cls, site_uid, site_id):
-        return cls.objects.get(site_uid=site_uid, site_id=site_id)
-
-
+        try:
+            return cls.objects.select_related('user').get(
+                site_uid=site_uid, site_id=site_id
+            )
+        except SocialUser.DoesNotExist:
+            return None
+    
+    
+    

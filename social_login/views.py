@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponseRedirect
+from django.shortcuts import render_to_response
 
 from django.conf import settings
 
@@ -8,7 +9,7 @@ from socialoauth import socialsites
 from socialoauth.utils import import_oauth_class
 from socialoauth.exception import SocialAPIError
 
-from social_login.models import SocialUser
+from .models import SocialUser
 
 
 SOCIALOAUTH_SITES = getattr(settings, 'SOCIALOAUTH_SITES', None)
@@ -18,39 +19,42 @@ if SOCIALOAUTH_SITES is None:
 socialsites.config(SOCIALOAUTH_SITES)
 
 
-def login(request):
-    if request.method == 'GET':
-        # show the login page
-        
-        def _link(s):
-            s = import_oauth_class(s)()
-            link = '使用 %s 登录' % s.site_name
-            
-            return """<div style="margin: 20px;">
-            <a href="%s">%s</a>
-            </div>""" % (s.authorize_url, link)
-            
-        links = map(_link, socialsites.list_sites())
-        links = '\n'.join(links)
-        
-        html = """<!DOCTYPE html>
-        <html>
-            <body>%s</body>
-        </html>
-        """ % links
-        
-        return HttpResponse(html)
+from .app_settings import (
+    SOCIAL_LOGIN_DONE_REDIRECT_URL,
+    SOCIAL_LOGIN_ERROR_REDIRECT_URL,
+    SOCIAL_LOGIN_LOGIN_TEMPLATE,
+)
 
 
-def oauth_callback(request, sitename):
+def social_login_index(request):
+    def make_site(s):
+        s = import_oauth_class(s)()
+        return {
+            'site_id': s.site_id,
+            'site_name': s.site_name,
+            'authorize_url': s.authorize_url,
+        }
+    
+    sites = [make_site(s) for s in socialsites.list_sites()]
+    return render_to_response(
+        SOCIAL_LOGIN_LOGIN_TEMPLATE,
+        {'social_sites': sites}
+    )
+
+
+def social_login_callback(request, sitename):
     code = request.GET.get('code', None)
     if not code:
         # error occurred
-        raise Exception("get code error")
+        return HttpResponseRedirect(SOCIAL_LOGIN_ERROR_REDIRECT_URL)
     
     s = import_oauth_class(socialsites[sitename])()
     
-    s.get_access_token(code)
+    try:
+        s.get_access_token(code)
+    except SocialAPIError:
+        # see social_oauth example and docs
+        return HttpResponseRedirect(SOCIAL_LOGIN_ERROR_REDIRECT_URL)
     
     SocialUser.create_user(
         username=s.name,
@@ -59,6 +63,5 @@ def oauth_callback(request, sitename):
         avatar=s.avatar
     )
     
-    print 'done...'
-    return HttpResponse('ok')
-    
+    # done
+    return HttpResponseRedirect(SOCIAL_LOGIN_DONE_REDIRECT_URL)
