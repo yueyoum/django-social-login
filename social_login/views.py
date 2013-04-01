@@ -56,12 +56,13 @@ def social_login_callback(request, sitename):
         # see social_oauth example and docs
         return HttpResponseRedirect(SOCIAL_LOGIN_ERROR_REDIRECT_URL)
     
-    SocialUser.create_user(
-        username=s.name,
-        site_uid=s.uid,
-        site_id=s.site_id,
-        avatar=s.avatar
-    )
+    if SocialUser.get_user(s.uid, s.site_id) is None:
+        SocialUser.create_user(
+            username=s.name,
+            site_uid=s.uid,
+            site_id=s.site_id,
+            avatar=s.avatar
+        )
     
     # done
     return HttpResponseRedirect(SOCIAL_LOGIN_DONE_REDIRECT_URL)
