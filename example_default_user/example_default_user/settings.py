@@ -2,8 +2,8 @@ import os
 import sys
 
 CURRENT_PATH = os.path.dirname(os.path.realpath(__file__))
-ROOT_PAH = os.path.dirname(CURRENT_PATH)
-PROJECT_PATH = os.path.dirname(ROOT_PAH)
+ROOT_PATH = os.path.dirname(CURRENT_PATH)
+PROJECT_PATH = os.path.dirname(ROOT_PATH)
 
 
 try:
@@ -23,7 +23,7 @@ MANAGERS = ADMINS
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
-        #'NAME': os.path.join(ROOT_PAH, 'test.db'),                      # Or path to database file if using sqlite3.
+        #'NAME': os.path.join(ROOT_PATH, 'test.db'),                      # Or path to database file if using sqlite3.
         # The following settings are not used with sqlite3:
         'NAME': 'usertest',
         'USER': 'root',
@@ -81,6 +81,7 @@ STATIC_URL = '/static/'
 
 # Additional locations of static files
 STATICFILES_DIRS = (
+    os.path.join(ROOT_PATH, 'static'),
     # Put strings here, like "/home/html/static" or "C:/www/django/static".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
@@ -134,6 +135,7 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'django.contrib.admin',
     
+    'app',
     'social_login',
 )
 

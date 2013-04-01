@@ -13,11 +13,11 @@ SOCIAL_LOGIN_LOGIN_TEMPLATE = getattr(
 )
 
 SOCIAL_LOGIN_LOGIN_URL = getattr(
-    settings, 'SOCIAL_LOGIN_LOGIN_URL', r'^/account/login/?$'
+    settings, 'SOCIAL_LOGIN_LOGIN_URL', r'^account/login/?$'
 )
 
 SOCIAL_LOGIN_CALLBACK_URL_PATTERN = getattr(
-    settings, 'SOCIAL_LOGIN_CALLBACK_URL_PATTERN', r'^/account/oauth/(?P<sitename>\w+)/?$'
+    settings, 'SOCIAL_LOGIN_CALLBACK_URL_PATTERN', r'^account/oauth/(?P<sitename>\w+)/?$'
 )
 
 SOCIAL_LOGIN_DONE_REDIRECT_URL = getattr(
