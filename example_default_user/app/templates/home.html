@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block content %}
+    {% if users %}
+    <table cellspacing=10>
+        <thead>
+            <tr><td>名称</td><td>来自</td><td>头像</td><td>内部ID</td><td>当前登录用户</td></tr>
+        </thead>
+        {% for u in users %}
+            <tr>
+                <td>{{ u.user.username }}</td>
+                <td>{{ u.site_id }}</td>
+                <td><img src="{{ u.avatar }}" /></td>
+                <td>{{ u.user.id }}</td>
+                <td>
+                    {% if u.current %}
+                        是
+                    {% else %}
+                        否
+                    {% endif %}
+                </td>
+            </tr>
+        {% endfor %}
+    </table>
+    {% else %}
+        <h2>No users</h2>
+    {% endif %}
+    <hr />
+    <h1><a href="{% url "social_login_index" %}">Login</a></h1>
+{% endblock  %}
