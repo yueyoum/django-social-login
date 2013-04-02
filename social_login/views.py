@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from django.http import HttpResponseRedirect
-from django.shortcuts import render_to_response
+#from django.shortcuts import render_to_response
 
 from django.conf import settings
 
@@ -22,30 +22,15 @@ socialsites.config(SOCIALOAUTH_SITES)
 from .app_settings import (
     SOCIAL_LOGIN_DONE_REDIRECT_URL,
     SOCIAL_LOGIN_ERROR_REDIRECT_URL,
-    SOCIAL_LOGIN_LOGIN_TEMPLATE,
 )
 
-
-def social_login_index(request):
-    def make_site(s):
-        s = import_oauth_class(s)()
-        return {
-            'site_id': s.site_id,
-            'site_name': s.site_name,
-            'authorize_url': s.authorize_url,
-        }
-    
-    sites = [make_site(s) for s in socialsites.list_sites()]
-    return render_to_response(
-        SOCIAL_LOGIN_LOGIN_TEMPLATE,
-        {'social_sites': sites}
-    )
 
 
 def social_login_callback(request, sitename):
     code = request.GET.get('code', None)
     if not code:
         # error occurred
+        print 'no code'
         return HttpResponseRedirect(SOCIAL_LOGIN_ERROR_REDIRECT_URL)
     
     s = import_oauth_class(socialsites[sitename])()
@@ -54,6 +39,7 @@ def social_login_callback(request, sitename):
         s.get_access_token(code)
     except SocialAPIError:
         # see social_oauth example and docs
+        print 'get_access_token error'
         return HttpResponseRedirect(SOCIAL_LOGIN_ERROR_REDIRECT_URL)
     
     if SocialUser.get_user(s.uid, s.site_id) is None:
