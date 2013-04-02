@@ -30,7 +30,7 @@
     {% for s in social_sites %}
         <div class="social-login-link" url="{{ s.authorize_url }}">
             <a href="{{ s.authorize_url }}">
-            使用{{ s.site_name }}登录
+            使用 {{ s.site_name_zh }} 登录
             </a>
         </div>
     {% endfor %}

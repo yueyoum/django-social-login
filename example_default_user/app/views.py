@@ -23,3 +23,5 @@ def home(request):
     )
 
 
+def login(request):
+    return render_to_response('login.html', context_instance=RequestContext(request))
