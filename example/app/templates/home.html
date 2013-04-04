@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block content %}
+    {% if users %}
+    <table>
+        <thead>
+            <tr><td>uid</td><td>第三方帐号</td><td>名字</td><td>头像</td><td>当前登录用户</td></tr>
+        </thead>
+        {% for u in users %}
+            <tr>
+                <td>{{ u.id }}</td>
+                <td>{{ u.is_social }}</td>
+                <td>{{ u.username }}</td>
+                <td><img src="{{ u.avatar }}" /></td>
+                <td>
+                    {% if u.current %}
+                        是
+                    {% else %}
+                        否
+                    {% endif %}
+                </td>
+            </tr>
+        {% endfor %}
+    </table>
+    {% else %}
+        <h2>No users</h2>
+    {% endif %}
+    <hr />
+    <h1>
+        {% if logged %}
+            <a href="{% url "logout" %}">Logout</a>
+        {% else %}
+            <a href="{% url "login" %}">Login</a>
+        {% endif %}
+    </h1>
+{% endblock  %}

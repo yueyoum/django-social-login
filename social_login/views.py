@@ -1,9 +1,6 @@
 # -*- coding: utf-8 -*-
-
 from django.http import HttpResponseRedirect
-#from django.shortcuts import render_to_response
-
-from django.conf import settings
+from django.db.models import get_model
 
 from socialoauth import socialsites
 from socialoauth.utils import import_oauth_class
@@ -12,18 +9,15 @@ from socialoauth.exception import SocialAPIError
 from .models import SocialUser
 
 
-SOCIALOAUTH_SITES = getattr(settings, 'SOCIALOAUTH_SITES', None)
-if SOCIALOAUTH_SITES is None:
-    raise Exception("SOCIALOAUTH_SITES settings not found!")
-
-socialsites.config(SOCIALOAUTH_SITES)
-
-
 from .app_settings import (
+    SOCIALOAUTH_SITES,
+    SOCIAL_LOGIN_USER_INFO_MODEL,
     SOCIAL_LOGIN_DONE_REDIRECT_URL,
     SOCIAL_LOGIN_ERROR_REDIRECT_URL,
 )
 
+
+socialsites.config(SOCIALOAUTH_SITES)
 
 
 def social_login_callback(request, sitename):
@@ -42,13 +36,21 @@ def social_login_callback(request, sitename):
         print 'get_access_token error'
         return HttpResponseRedirect(SOCIAL_LOGIN_ERROR_REDIRECT_URL)
     
-    if SocialUser.get_user(s.uid, s.site_id) is None:
-        SocialUser.create_user(
+    
+    try:
+        user = SocialUser.objects.get(site_uid=s.uid, site_id=s.site_id)
+    except SocialUser.DoesNotExist:
+        user = SocialUser.objects.create(site_uid=s.uid, site_id=s.site_id)
+        info_model = get_model(*SOCIAL_LOGIN_USER_INFO_MODEL.split('.'))
+        info_model.objects.create(
+            id=user.id,
             username=s.name,
-            site_uid=s.uid,
-            site_id=s.site_id,
             avatar=s.avatar
         )
+        
+        
+    request.session['uid'] = user.id
     
     # done
     return HttpResponseRedirect(SOCIAL_LOGIN_DONE_REDIRECT_URL)
+
