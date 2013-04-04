@@ -5,6 +5,12 @@ from socialoauth.utils import import_oauth_class
 
 from .utils import LazyList
 
+# add 'social_login.context_processors.social_sites' in TEMPLATE_CONTEXT_PROCESSORS
+# then in template, you can get this sites via {% for s in social_sites %} ... {% endfor %}
+# Don't worry about the performance,
+# `social_sites` is a lazy object, it readly called just access the `social_sites`
+
+
 def social_sites(request):
     def _social_sites():
         def make_site(s):

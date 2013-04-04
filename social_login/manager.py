@@ -3,6 +3,18 @@
 from django.db import models
 
 
+# custom the register/login User Model,
+# the Model MUST using InnerUserManager
+#
+# example:
+# class UserAuth(models.Model):
+#     email = models.EmailField()
+#     password = models.CharField(max_length=64)
+#
+#    objects = InnerUserManager()
+
+
+
 class BaseManager(models.Manager):
     def create(self, is_social, **kwargs):
         if 'id' not in kwargs:

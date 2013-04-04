@@ -23,8 +23,7 @@ socialsites.config(SOCIALOAUTH_SITES)
 def social_login_callback(request, sitename):
     code = request.GET.get('code', None)
     if not code:
-        # error occurred
-        print 'no code'
+        # Maybe user not authorize
         return HttpResponseRedirect(SOCIAL_LOGIN_ERROR_REDIRECT_URL)
     
     s = import_oauth_class(socialsites[sitename])()
@@ -33,7 +32,6 @@ def social_login_callback(request, sitename):
         s.get_access_token(code)
     except SocialAPIError:
         # see social_oauth example and docs
-        print 'get_access_token error'
         return HttpResponseRedirect(SOCIAL_LOGIN_ERROR_REDIRECT_URL)
     
     
@@ -48,7 +46,7 @@ def social_login_callback(request, sitename):
             avatar=s.avatar
         )
         
-        
+    # set uid in session, then next time, will auto loggin
     request.session['uid'] = user.id
     
     # done
