@@ -1,13 +1,27 @@
 {% extends "base.html" %}
 
 {% block content %}
-    {% if error_msg %}
-        <h2 style="color: red">{{ error_msg }}</h2>
-    {% endif %}
     <p>{{ email }}</p>
     <p>set username for youself</p>
-    <form action="{% url "register_step_2" %}" method="post">{% csrf_token %}
-        <p>username: <input type="text" name="username"/></p>
-        <input type="submit" value="submit" />
+    <form  action="{% url "register_step_2" %}" method="post">{% csrf_token %}
+        <div class="control-group">
+            <label class="control-label" for="inputUsername">Email</label>
+            <div class="controls">
+                <input type="text" id="inputUsername" name="username" placeholder="username">
+            </div>
+        </div>
+        
+        <div class="control-group">
+            <div class="controls">
+                <button type="submit" class="btn">Submit</button>
+            </div>
+        </div>
+        
     </form>
+    
+    {% if error_msg %}
+        <div class="alert alert-error">
+        {{ error_msg }}
+        </div>
+    {% endif %}
 {% endblock %}

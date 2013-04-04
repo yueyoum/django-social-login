@@ -1,12 +1,33 @@
 {% extends "base.html" %}
 
 {% block content %}
-    {% if error_msg %}
-        <h2 style="color: red">{{ error_msg }}</h2>
-    {% endif %}
-    <form action="{% url "register" %}" method="post">{% csrf_token %}
-        <p>email: <input type="text" name="email"/></p>
-        <p>password: <input type="password" name="password"/></p>
-        <input type="submit" value="register" />
+    
+    
+    <form class="form-horizontal" action="{% url "register" %}" method="post">{% csrf_token %}
+        <div class="control-group">
+            <label class="control-label" for="inputEmail">Email</label>
+            <div class="controls">
+                <input type="text" id="inputEmail" name="email" placeholder="Email">
+            </div>
+        </div>
+        
+        <div class="control-group">
+            <label class="control-label" for="inputPassword">Email</label>
+            <div class="controls">
+                <input type="password" id="inputPassword" name="password" placeholder="Password">
+            </div>
+        </div>
+        
+        <div class="control-group">
+            <div class="controls">
+                <button type="submit" class="btn">Register</button>
+            </div>
+        </div>
     </form>
+    
+    {% if error_msg %}
+    <div class="alert alert-error">
+        {{ error_msg }}
+    </div>
+    {% endif %}
 {% endblock %}

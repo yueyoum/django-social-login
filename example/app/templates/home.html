@@ -2,27 +2,35 @@
 
 {% block content %}
     {% if users %}
-    <table>
+    <table class="table table-bordered">
         <thead>
             <tr><td>uid</td><td>第三方帐号</td><td>名字</td><td>头像</td><td>当前登录用户</td></tr>
         </thead>
         {% for u in users %}
             <tr>
                 <td>{{ u.id }}</td>
-                <td>{{ u.is_social }}</td>
+                <td>
+                    {% if u.is_social %}
+                        <i class="icon-ok"></i>
+                    {% else %}
+                        <i class="icon-remove"></i>
+                    {% endif %}
+                </td>
                 <td>{{ u.username }}</td>
                 <td>
                     <div style="width:50px; height:50px;">
                     {% if u.avatar %}
                         <img src="{{ u.avatar }}" />
+                    {% else %}
+                        <i class="icon-ban-circle"></i>
                     {% endif %}
                     </div>
                 </td>
                 <td>
                     {% if u.current %}
-                        是
+                        <i class="icon-ok"></i>
                     {% else %}
-                        否
+                        <i class="icon-remove"></i>
                     {% endif %}
                 </td>
             </tr>

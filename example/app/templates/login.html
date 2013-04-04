@@ -1,22 +1,53 @@
 {% extends "base.html" %}
 
 {% block content %}
-    {% if error_msg %}
-        {{ error_msg }}
-    {% endif %}
-    <form action="{% url "login" %}" method="post">{% csrf_token %}
-        <p>email: <input type="text" name="email"/></p>
-        <p>password: <input type="password" name="password"/></p>
-        <input type="submit" value="login" />
+    
+    <div class="container-fluid">
+    <div class="row-fluid">
+        
+    <div class="span6">
+    <form class="form-horizontal" action="{% url "login" %}" method="post">{% csrf_token %}
+        <div class="control-group">
+            <label class="control-label" for="inputEmail">Email</label>
+            <div class="controls">
+                <input type="text" id="inputEmail" name="email" placeholder="Email">
+            </div>
+        </div>
+        
+        <div class="control-group">
+            <label class="control-label" for="inputPassword">Email</label>
+            <div class="controls">
+                <input type="password" id="inputPassword" name="password" placeholder="Password">
+            </div>
+        </div>
+        
+        <div class="control-group">
+            <div class="controls">
+                <button type="submit" class="btn">Login</button>
+            </div>
+        </div>
     </form>
+    
+    {% if error_msg %}
+        <div class="alert alert-error">
+            {{ error_msg }}
+        </div>
+    {% endif %}
+    
+    </div>
+    
+    <div class="span6">
     <p>no account? <a href="{% url "register" %}">Register</a></p>
     <p>Or, Sign in with the following social accounts</p>
-    <hr />
     {% for s in social_sites %}
-        <div class="social-login-link" url="{{ s.authorize_url }}">
+        <div style="padding: 15px; border: 1px solid #eee;">
             <a href="{{ s.authorize_url }}">
             使用 {{ s.site_name_zh }} 登录
             </a>
         </div>
     {% endfor %}
+    </div>
+    
+    </div>
+    </div>
 {% endblock %}
