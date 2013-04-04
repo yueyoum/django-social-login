@@ -23,5 +23,5 @@ class SocialUserManager(BaseManager):
         
 class InnerUserManager(BaseManager):
     def create(self, **kwargs):
-        return super(SocialUserManager, self).create(False, **kwargs)
+        return super(InnerUserManager, self).create(False, **kwargs)
         

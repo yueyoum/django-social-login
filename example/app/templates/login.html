@@ -1,32 +1,17 @@
 {% extends "base.html" %}
 
-{% block js %}
-    <script src="/static/jquery.simplemodal.1.4.4.min.js"></script>
-    <script type="text/javascript">
-        function make_modal(url) {
-            $.modal('<iframe src="' + url + '" height="700" width="900" style="border:0">', {
-                closeHTML: "close",
-                containerCss: {
-                    backgroundColor: "#666",
-                    borderColor: "#fff",
-                    height: 700,
-                    padding: 0,
-                    width: 900
-                },
-                overlayClose: true
-            });
-        }
-        
-        //$(function(){
-        //    $('div.social-login-link').click(function(){
-        //        make_modal($(this).attr('url'));
-        //    });
-        //});
-    </script>
-{% endblock %}
-
-
 {% block content %}
+    {% if error_msg %}
+        {{ error_msg }}
+    {% endif %}
+    <form action="{% url "login" %}" method="post">{% csrf_token %}
+        <p>email: <input type="text" name="email"/></p>
+        <p>password: <input type="password" name="password"/></p>
+        <input type="submit" value="login" />
+    </form>
+    <p>no account? <a href="{% url "register" %}">Register</a></p>
+    <p>Or, Sign in with the following social accounts</p>
+    <hr />
     {% for s in social_sites %}
         <div class="social-login-link" url="{{ s.authorize_url }}">
             <a href="{{ s.authorize_url }}">
