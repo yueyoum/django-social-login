@@ -6,8 +6,16 @@ from django.template import RequestContext
 from django.core.urlresolvers import reverse
 
 from social_login.models import SiteUser
+from socialoauth import socialsites
+from socialoauth.utils import import_oauth_class
 
 from .models import UserAuth, UserInfo
+
+
+class RegisterLoginError(Exception):
+    pass
+
+
 
 def home(request):
     if request.siteuser:
@@ -20,7 +28,14 @@ def home(request):
     def _make_user_info(u):
         info = {}
         info['id'] = u.id
-        info['is_social'] = u.is_social
+        info['social'] = u.is_social
+        
+        if info['social']:
+            social_info = u.get_social_info()
+            site_id = social_info.site_id
+            s = import_oauth_class( socialsites.get_site_class_by_id(site_id) )()
+            info['social'] = s.site_name_zh
+        
         info['username'], info['avatar'] = u.info_list('username', 'avatar')
         info['current'] = request.siteuser and request.siteuser.id == u.id
         return info
@@ -38,9 +53,6 @@ def home(request):
     )
 
 
-class RegisterError(Exception):
-    pass
-
 
 def register(request):
     if request.method == 'GET':
@@ -52,10 +64,10 @@ def register(request):
         email = request.POST.get('email', None)
         password = request.POST.get('password', None)
         if not email or not password:
-            raise RegisterError("Fill email and password")
+            raise RegisterLoginError("Fill email and password")
         
         if UserAuth.objects.filter(email=email).exists():
-            raise RegisterError("Email has been taken")
+            raise RegisterLoginError("Email has been taken")
         
         user = UserAuth.objects.create(email=email, password=password)
         return user
@@ -64,7 +76,7 @@ def register(request):
         user = _register()
         request.session['uid'] = user.id
         return HttpResponseRedirect(reverse('register_step_2'))
-    except RegisterError as e:
+    except RegisterLoginError as e:
         return render_to_response(
             'register.html',
             {'error_msg': e},
@@ -88,14 +100,14 @@ def register_step_2(request):
     def _register_step_2():
         username = request.POST.get('username', None)
         if not username:
-            raise RegisterError("Fill in username")
+            raise RegisterLoginError("Fill in username")
         
         UserInfo.objects.create(id=request.siteuser.id, username=username)
         
     try:
         _register_step_2()
         return HttpResponseRedirect(reverse('home'))
-    except RegisterError as e:
+    except RegisterLoginError as e:
         return render_to_response(
             'register_step_2.html',
             {
@@ -121,10 +133,10 @@ def login(request):
         email = request.POST.get('email', None)
         password = request.POST.get('password', None)
         if not email or not password:
-            raise RegisterError("Fill email and password")
+            raise RegisterLoginError("Fill email and password")
         
         if not UserAuth.objects.filter(email=email, password=password).exists():
-            raise RegisterError("Invalid account")
+            raise RegisterLoginError("Invalid account")
         
         user = UserAuth.objects.get(email=email, password=password)
         return user
@@ -133,7 +145,7 @@ def login(request):
         user = _login()
         request.session['uid'] = user.id
         return HttpResponseRedirect(reverse('home'))
-    except RegisterError as e:
+    except RegisterLoginError as e:
         return render_to_response(
             'login.html',
             {'error_msg': e},

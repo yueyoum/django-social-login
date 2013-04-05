@@ -10,8 +10,8 @@
             <tr>
                 <td>{{ u.id }}</td>
                 <td>
-                    {% if u.is_social %}
-                        <i class="icon-ok"></i>
+                    {% if u.social %}
+                        {{ u.social }}
                     {% else %}
                         <i class="icon-remove"></i>
                     {% endif %}

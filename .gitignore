@@ -5,4 +5,5 @@
 local_settings.py
 
 env
+test.db
 
