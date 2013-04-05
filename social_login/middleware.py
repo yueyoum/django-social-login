@@ -26,6 +26,9 @@ class SocialLoginUser(object):
             if not uid:
                 return None
             
-            return SiteUser.objects.get(id=int(uid))
+            user = SiteUser.objects.get(id=int(uid))
+            if not user.is_active:
+                user = None
+            return user
         
         request.siteuser = SimpleLazyObject(get_user)
