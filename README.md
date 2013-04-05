@@ -23,7 +23,7 @@
 *   **SOCIAL_LOGIN_USER_INFO_MODEL**
 
     用户信息的model，例如你的app名叫 myapp， 存储用户信息的model叫 UserInfo,
-    那么这里就设置为 SOCIAL_LOGIN_USER_INFO_MODEL='myapp.UserInfo'
+    那么这里就设置为 `SOCIAL_LOGIN_USER_INFO_MODEL='myapp.UserInfo'`
     
     UserInfo表中必须包含两个Field:
     
@@ -75,19 +75,20 @@
         request.siteuser.info_list(*args)   获取指定field的用户信息
         
         # if request.siteuser.is_social is True
-        social_info = s.get_social_info()
+        social_info = request.siteuser.get_social_info()
         social_info.site_uid                用户的第三方网站中的uid
         social_info.site_id                 用户来自哪个网站的site_id
     
     
     
-*   Other settings
+*   **Other settings**
 
-*   在你存储用户 登录/认证 信息的表中 设置 `objects`
+    在你存储用户 登录/认证 信息的表中 设置 `objects`
     
     例子：
     
         from social_login.manager import InnerUserManager
+        
         class UserAuth(models.Model):
             email = models.EmailField(unique=True)
             password = models.CharField(max_length=64)
@@ -96,10 +97,8 @@
             
             
     
-*   runserver
-
-    经过上面的设置后， `python manage.py validate` 无错误就 `python manage.py runserver`.
-    如果有错，请确保正确安装，并且正确设置。完整的例子请参考 `example`
+经过上面的设置后， `python manage.py validate` 无错误就 `python manage.py runserver`.
+如果有错，请确保正确安装，并且正确设置。完整的例子请参考 `example`
     
     
 ## Login process
@@ -131,7 +130,7 @@
 
 #### SOCIAL_LOGIN_UID_LENGTH
 
-保存用户第三方站点uid的Field是一个 CharField，这个设置用来制定此 CharField的 max_length。
+保存用户第三方站点uid的Field是一个 CharField，这个设置用来指定此 CharField的 max_length。
 默认255
     
     
@@ -140,6 +139,8 @@
 用户认证结束后的回调地址，必须与 在OAuth2服务认证时提供的 redirect_uri 相匹配
 
 默认设置为 `r'account/oauth/(?P<sitename>\w+)/?$'`
+
+对应的 SOCIALOAUTH_SITES 设置见 [doc.md][1]
 
 
 #### SOCIAL_LOGIN_DONE_REDIRECT_URL
@@ -158,7 +159,7 @@
 ![admin][4]
     
     
-[1]: https://github.com/yueyoum/social-oauth
+[1]: https://github.com/yueyoum/social-oauth/blob/master/doc.md#-settingspy
 [2]: http://i1297.photobucket.com/albums/ag23/yueyoum/2_zpscfb21331.png
 [3]: http://i1297.photobucket.com/albums/ag23/yueyoum/3_zps4c5735ae.png
 [4]: http://i1297.photobucket.com/albums/ag23/yueyoum/4_zpsd0c7d263.png
