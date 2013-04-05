@@ -7,7 +7,9 @@
 
 ### install
 
-    pip install django-social-login
+```bash
+pip install django-social-login
+```
     
     
 ### settings.py
@@ -15,6 +17,19 @@
 下面几项是必要的设置，必须在项目 settings.py 中设置好
 
 *   **把 `social_login` 加入到 `INSTALLED_APPS` 中**
+
+*   **设置项目urls.py**
+
+    把 `url(r'', include('social_login.urls'))` 放到 项目urls.py 的 **最下面**
+    
+    ```python
+    urlpatterns = patterns('',
+        url(r'^admin/', include(admin.site.urls)),
+        # ...
+        url(r'', include('social_login.urls')),
+    )
+    ```
+    
 
 *   **SOCIALOAUTH_SITES**
     
@@ -27,8 +42,10 @@
     
     UserInfo表中必须包含两个Field:
     
-        username = models.CharField(max_length=32)
-        avatar = models.CharField(max_length=255)
+    ```python
+    username = models.CharField(max_length=32)
+    avatar = models.CharField(max_length=255)
+    ```
         
     用于存储第三方认证用户的用户名和头像url
     
@@ -48,10 +65,12 @@
     并且在 views 中传递了 `context_instance`，
     那么在模板中就可以通过 `{% for s in social_sites %}` 的形式在获得配置的站点信息
     
-        s.site_id       在 SOCIALOAUTH_SITES 中配置的 site_id
-        s.site_name     站点的 英文名字
-        s.site_name_zh  中文名字
-        s.authorize_url 引导用户授权的url
+    ```python
+    s.site_id       在 SOCIALOAUTH_SITES 中配置的 site_id
+    s.site_name     站点的 英文名字
+    s.site_name_zh  中文名字
+    s.authorize_url 引导用户授权的url
+    ```
         
     
     
@@ -68,16 +87,18 @@
     
     可以通过一下方法访问其属性：
     
-        request.siteuser.id                 用户uid
-        request.siteuser.is_social          是否是第三方帐号
-        request.siteuser.date_joined        用户加入时间
-        request.siteuser.info               用户信息对象
-        request.siteuser.info_list(*args)   获取指定field的用户信息
-        
-        # if request.siteuser.is_social is True
-        social_info = request.siteuser.get_social_info()
-        social_info.site_uid                用户的第三方网站中的uid
-        social_info.site_id                 用户来自哪个网站的site_id
+    ```python
+    request.siteuser.id                 用户uid
+    request.siteuser.is_social          是否是第三方帐号
+    request.siteuser.date_joined        用户加入时间
+    request.siteuser.info               用户信息对象
+    request.siteuser.info_list(*args)   获取指定field的用户信息
+    
+    # if request.siteuser.is_social is True
+    social_info = request.siteuser.get_social_info()
+    social_info.site_uid                用户的第三方网站中的uid
+    social_info.site_id                 用户来自哪个网站的site_id
+    ```
     
     
     
@@ -87,13 +108,15 @@
     
     例子：
     
-        from social_login.manager import InnerUserManager
+    ```python
+    from social_login.manager import InnerUserManager
+    
+    class UserAuth(models.Model):
+        email = models.EmailField(unique=True)
+        password = models.CharField(max_length=64)
         
-        class UserAuth(models.Model):
-            email = models.EmailField(unique=True)
-            password = models.CharField(max_length=64)
-            
-            objects = InnerUserManager()
+        objects = InnerUserManager()
+    ```
             
             
     
