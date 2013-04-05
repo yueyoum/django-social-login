@@ -5,6 +5,7 @@ from django.conf import settings
 # the following two are REQUIRED in django.conf.settings
 SOCIALOAUTH_SITES = settings.SOCIALOAUTH_SITES
 SOCIAL_LOGIN_USER_INFO_MODEL = settings.SOCIAL_LOGIN_USER_INFO_MODEL
+SOCIAL_LOGIN_ERROR_REDIRECT_URL = settings.SOCIAL_LOGIN_ERROR_REDIRECT_URL
 
 
 SOCIAL_LOGIN_UID_LENGTH = getattr(settings, 'SOCIAL_LOGIN_UID_LENGTH', 255)
@@ -20,9 +21,4 @@ SOCIAL_LOGIN_DONE_REDIRECT_URL = getattr(settings,
                                          'SOCIAL_LOGIN_DONE_REDIRECT_URL',
                                          '/'
                                          )
-
-SOCIAL_LOGIN_ERROR_REDIRECT_URL = getattr(settings,
-                                          'SOCIAL_LOGIN_ERROR_REDIRECT_URL',
-                                          '/login/error'
-                                          )
 

@@ -6,7 +6,7 @@ from .manager import SocialUserManager
 
 
 
-class User(models.Model):
+class SiteUser(models.Model):
     is_social = models.BooleanField(default=True)
     is_active = models.BooleanField(default=True)
     date_joined = models.DateTimeField(auto_now_add=True, db_index=True)

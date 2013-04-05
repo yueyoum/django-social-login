@@ -2,7 +2,7 @@
 
 from django.utils.functional import SimpleLazyObject
 
-from .models import User
+from .models import SiteUser
 
 # add 'social_login.middleware.SocialLoginUser' in MIDDLEWARE_CLASSES
 # then the request object will has a `siteuser` property
@@ -26,6 +26,6 @@ class SocialLoginUser(object):
             if not uid:
                 return None
             
-            return User.objects.get(id=int(uid))
+            return SiteUser.objects.get(id=int(uid))
         
         request.siteuser = SimpleLazyObject(get_user)

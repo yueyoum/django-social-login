@@ -18,7 +18,7 @@ from django.db import models
 class BaseManager(models.Manager):
     def create(self, is_social, **kwargs):
         if 'id' not in kwargs:
-            m = models.get_model('social_login', 'User')
+            m = models.get_model('social_login', 'SiteUser')
             u = m.objects.create(is_social=is_social)
             kwargs['id'] = u.id
             
