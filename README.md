@@ -7,20 +7,22 @@
 
 1.  install
 
+    ```
     pip install django-social-login
+    ```
     
     
 2.  settings.py
 
     有几项是必要的设置，必须在项目 settings.py 中设置好
     
-    *.  把 `social_login` 加入到 `INSTALLED_APPS` 中
+    *   把 `social_login` 加入到 `INSTALLED_APPS` 中
     
-    *.  SOCIALOAUTH_SITES
+    *   SOCIALOAUTH_SITES
         
         要使用的提供OAuth2服务的站点信息，见 [socialoauth文档][1]
     
-    *.  SOCIAL_LOGIN_USER_INFO_MODEL
+    *   SOCIAL_LOGIN_USER_INFO_MODEL
     
         用户信息的model，例如你的app名叫 myapp， 存储用户信息的model叫 UserInfo,
         那么这里就设置为 SOCIAL_LOGIN_USER_INFO_MODEL='myapp.UserInfo'
@@ -34,13 +36,13 @@
         ### note
         username 不能设置 unique=True，因为不同网站用户的用户名可能相同
         
-    *.  SOCIAL_LOGIN_ERROR_REDIRECT_URL
+    *   SOCIAL_LOGIN_ERROR_REDIRECT_URL
     
         在用户认证过程中发生错误（用户拒绝授权等）时要跳转到的url
         
         
         
-    *.  'social_login.context_processors.social_sites'
+    *   'social_login.context_processors.social_sites'
     
         把它加入到 TEMPLATE_CONTEXT_PROCESSORS 中，
         并且在 views 中传递了 context_instance，
@@ -52,7 +54,7 @@
             s.authorize_url 引导用户授权的url
         
         
-    *.  'social_login.middleware.SocialLoginUser'
+    *   'social_login.middleware.SocialLoginUser'
     
         把它加入到 MIDDLEWARE_CLASSES 中，
         这样在每个 view 的 request 对象会有一个 siteuser 属性
@@ -72,7 +74,7 @@
         
 3.  Other settings
 
-    *.  在你存储用户 登录/认证 信息的表中 设置 objects
+    *   在你存储用户 登录/认证 信息的表中 设置 objects
         
         例子：
             from social_login.manager import InnerUserManager
@@ -84,7 +86,7 @@
                 
                 
     
-3.  runserver
+4.  runserver
 
     经过上面的设置后， `python manage.py validate` 无错误就 `python manage.py runserver`.
     如果有错，请确保正确安装，并且正确设置
@@ -96,8 +98,8 @@
 
 1.  当用户点击login后，提供两个选择：
     
-    *.  使用已经注册的帐号登录
-    *.  使用第三方帐号登录
+    *   使用已经注册的帐号登录
+    *   使用第三方帐号登录
     
     ![login][2]
     
