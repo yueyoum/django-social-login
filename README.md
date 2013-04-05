@@ -5,16 +5,16 @@
 
 ## Usage
 
-1.  install
+*   install
 
     ```
     pip install django-social-login
     ```
     
     
-2.  settings.py
+*   settings.py
 
-    有几项是必要的设置，必须在项目 settings.py 中设置好
+    下面几项是必要，必须在项目 settings.py 中设置好
     
     *   把 `social_login` 加入到 `INSTALLED_APPS` 中
     
@@ -72,7 +72,7 @@
         
         
         
-3.  Other settings
+*   Other settings
 
     *   在你存储用户 登录/认证 信息的表中 设置 objects
         
@@ -86,7 +86,7 @@
                 
                 
     
-4.  runserver
+*   runserver
 
     经过上面的设置后， `python manage.py validate` 无错误就 `python manage.py runserver`.
     如果有错，请确保正确安装，并且正确设置
@@ -96,14 +96,14 @@
 
 第三方登录和自己网站内部注册/登录的流程如下：
 
-1.  当用户点击login后，提供两个选择：
+*   当用户点击login后，提供两个选择：
     
     *   使用已经注册的帐号登录
     *   使用第三方帐号登录
     
     ![login][2]
     
-2.  用户可以先 注册 ，并且用此帐号登录，也可以用第三方帐号登录。
+*   用户可以先 注册 ，并且用此帐号登录，也可以用第三方帐号登录。
     登录一些用户后的状态如下图：
     
     现在显示了登录过的用户信息，注意 uid为 5 和 6 的用户，
