@@ -1,0 +1,8 @@
+include LICENSE
+include MANIFEST.in
+include ChangeLog
+include README.txt
+recursive-include example *
+recursive-exclude * *.pyc
+exclude example/example/local_settings.py
+exclude example/test.db
