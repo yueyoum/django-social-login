@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 from django.core.urlresolvers import reverse
 
-from social_login.models import User
+from social_login.models import SiteUser
 
 from .models import UserAuth, UserInfo
 
@@ -15,7 +15,7 @@ def home(request):
             return HttpResponseRedirect(reverse('register_step_2'))
     
     
-    all_users = User.objects.all()
+    all_users = SiteUser.objects.all()
     
     def _make_user_info(u):
         info = {}
@@ -110,6 +110,10 @@ def register_step_2(request):
 
 
 def login(request):
+    if request.siteuser:
+        # already logged in
+        return HttpResponseRedirect(reverse('home'))
+    
     if request.method == 'GET':
         return render_to_response('login.html', context_instance=RequestContext(request))
     
@@ -145,3 +149,9 @@ def logout(request):
         pass
     finally:
         return HttpResponseRedirect(reverse('home'))
+
+
+
+
+def login_error(request):
+    return HttpResponse("OAuth Failure!")

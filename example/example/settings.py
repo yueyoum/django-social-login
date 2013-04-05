@@ -186,6 +186,7 @@ LOGGING = {
 
 
 SOCIAL_LOGIN_USER_INFO_MODEL = 'app.UserInfo'
+SOCIAL_LOGIN_ERROR_REDIRECT_URL = '/account/login/error'
 
 try:
     from local_settings import *
