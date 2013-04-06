@@ -35,19 +35,24 @@ def social_login_callback(request, sitename):
         return HttpResponseRedirect(SOCIAL_LOGIN_ERROR_REDIRECT_URL)
     
     
+    user_info_model = get_model(*SOCIAL_LOGIN_USER_INFO_MODEL.split('.'))
     try:
         user = SocialUser.objects.get(site_uid=s.uid, site_id=s.site_id)
+        # got user, update it's username and avatar
+        user_info_model.objects.filter(user_id=user.user_id).update(
+            username=s.name, avatar=s.avatar
+        )
+        
     except SocialUser.DoesNotExist:
         user = SocialUser.objects.create(site_uid=s.uid, site_id=s.site_id)
-        info_model = get_model(*SOCIAL_LOGIN_USER_INFO_MODEL.split('.'))
-        info_model.objects.create(
-            id=user.id,
+        user_info_model.objects.create(
+            user_id=user.user_id,
             username=s.name,
             avatar=s.avatar
         )
         
-    # set uid in session, then next time, will auto loggin
-    request.session['uid'] = user.id
+    # set uid in session, then next time, this user will auto loggin
+    request.session['uid'] = user.user_id
     
     # done
     return HttpResponseRedirect(SOCIAL_LOGIN_DONE_REDIRECT_URL)

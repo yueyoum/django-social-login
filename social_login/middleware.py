@@ -3,6 +3,7 @@
 from django.utils.functional import SimpleLazyObject
 
 from .models import SiteUser
+from .app_settings import SOCIAL_LOGIN_SITEUSER_SELECT_RELATED
 
 # add 'social_login.middleware.SocialLoginUser' in MIDDLEWARE_CLASSES
 # then the request object will has a `siteuser` property
@@ -26,7 +27,12 @@ class SocialLoginUser(object):
             if not uid:
                 return None
             
-            user = SiteUser.objects.get(id=int(uid))
+            try:
+                user = SiteUser.objects.select_related(
+                    *SOCIAL_LOGIN_SITEUSER_SELECT_RELATED).get(id=int(uid))
+            except SiteUser.DoesNotExist:
+                return None
+            
             if not user.is_active:
                 user = None
             return user

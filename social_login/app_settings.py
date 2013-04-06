@@ -22,3 +22,7 @@ SOCIAL_LOGIN_DONE_REDIRECT_URL = getattr(settings,
                                          '/'
                                          )
 
+SOCIAL_LOGIN_SITEUSER_SELECT_RELATED = getattr(settings,
+                                               'SOCIAL_LOGIN_SITEUSER_SELECT_RELATED',
+                                               ('user_info',)
+                                               )
