@@ -22,14 +22,14 @@ MANAGERS = ADMINS
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
-        #'NAME': os.path.join(ROOT_PATH, 'test.db'),                      # Or path to database file if using sqlite3.
+        'ENGINE': 'django.db.backends.sqlite3', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
+        'NAME': os.path.join(ROOT_PATH, 'test.db'),                      # Or path to database file if using sqlite3.
         # The following settings are not used with sqlite3:
-        'NAME': 'usertest',
-        'USER': 'root',
-        'PASSWORD': '',
-        'HOST': '127.0.0.1',                      # Empty for localhost through domain sockets or '127.0.0.1' for localhost through TCP.
-        'PORT': '3306',                      # Set to empty string for default.
+        #'NAME': '',
+        #'USER': '',
+        #'PASSWORD': '',
+        #'HOST': '',                      # Empty for localhost through domain sockets or '127.0.0.1' for localhost through TCP.
+        #'PORT': '',                      # Set to empty string for default.
     }
 }
 
@@ -49,15 +49,8 @@ LANGUAGE_CODE = 'en-us'
 
 SITE_ID = 1
 
-# If you set this to False, Django will make some optimizations so as not
-# to load the internationalization machinery.
 USE_I18N = False
-
-# If you set this to False, Django will not format dates, numbers and
-# calendars according to the current locale.
 USE_L10N = False
-
-# If you set this to False, Django will not use timezone-aware datetimes.
 USE_TZ = False
 
 # Absolute filesystem path to the directory that will hold user-uploaded files.
@@ -129,7 +122,10 @@ MIDDLEWARE_CLASSES = (
     # Uncomment the next line for simple clickjacking protection:
     # 'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'social_login.middleware.SocialLoginUser',
+    #'debug_toolbar.middleware.DebugToolbarMiddleware',
 )
+
+#INTERNAL_IPS = ('127.0.0.1',)
 
 ROOT_URLCONF = 'example.urls'
 
@@ -153,6 +149,7 @@ INSTALLED_APPS = (
     
     'app',
     'social_login',
+    #'debug_toolbar',
 )
 
 # A sample logging configuration. The only tangible logging
@@ -187,6 +184,7 @@ LOGGING = {
 
 SOCIAL_LOGIN_USER_INFO_MODEL = 'app.UserInfo'
 SOCIAL_LOGIN_ERROR_REDIRECT_URL = '/account/login/error'
+#SOCIAL_LOGIN_SITEUSER_SELECT_RELATED = ('user_info', 'social_user', 'inner_user')
 
 try:
     from local_settings import *

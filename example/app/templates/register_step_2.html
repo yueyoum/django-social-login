@@ -5,7 +5,7 @@
     <p>set username for youself</p>
     <form  action="{% url "register_step_2" %}" method="post">{% csrf_token %}
         <div class="control-group">
-            <label class="control-label" for="inputUsername">Email</label>
+            <label class="control-label" for="inputUsername">Username</label>
             <div class="controls">
                 <input type="text" id="inputUsername" name="username" placeholder="username">
             </div>

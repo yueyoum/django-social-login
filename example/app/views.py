@@ -5,9 +5,17 @@ from django.shortcuts import render_to_response
 from django.template import RequestContext
 from django.core.urlresolvers import reverse
 
+# in this example, import SiteUser just for get all users,
+# to display at the home page.
+# In a real project, It's not necessary import SiteUser usually
 from social_login.models import SiteUser
+
+# as same as SiteUser, import the following two just for this example
+# to get the siet_name_zh
 from socialoauth import socialsites
 from socialoauth.utils import import_oauth_class
+
+
 
 from .models import UserAuth, UserInfo
 
@@ -20,11 +28,10 @@ class RegisterLoginError(Exception):
 def home(request):
     if request.siteuser:
         if not UserInfo.objects.filter(user_id=request.siteuser.id).exists():
-        #if not request.siteuser.user_info:
             return HttpResponseRedirect(reverse('register_step_2'))
     
     
-    all_users = SiteUser.objects.all()
+    all_users = SiteUser.objects.select_related('user_info', 'social_user').all()
     
     def _make_user_info(u):
         info = {}
@@ -32,8 +39,6 @@ def home(request):
         info['social'] = u.is_social
         
         if info['social']:
-            #social_info = u.get_social_info()
-            #site_id = social_info.site_id
             site_id = u.social_user.site_id
             s = import_oauth_class( socialsites.get_site_class_by_id(site_id) )()
             info['social'] = s.site_name_zh
@@ -41,7 +46,6 @@ def home(request):
         info['username'] = u.user_info.username
         info['avatar'] = u.user_info.avatar
         
-        #info['username'], info['avatar'] = u.info_list('username', 'avatar')
         info['current'] = request.siteuser and request.siteuser.id == u.id
         return info
     
@@ -52,7 +56,6 @@ def home(request):
         'home.html',
         {
             'users': users,
-            'logged': request.siteuser
         },
         context_instance=RequestContext(request)
     )
@@ -132,7 +135,10 @@ def login(request):
         return HttpResponseRedirect(reverse('home'))
     
     if request.method == 'GET':
-        return render_to_response('login.html', context_instance=RequestContext(request))
+        return render_to_response(
+            'login.html',
+            context_instance=RequestContext(request)
+        )
     
     def _login():
         email = request.POST.get('email', None)
