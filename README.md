@@ -14,7 +14,8 @@ pip install django-social-login
     
 ### settings.py
 
-下面几项是必要的设置，必须在项目 settings.py 中设置好
+下面几项是必要的设置，必须在项目 settings.py 中设置好。
+此外还有一些非必要的设置，[见这里](#optional-settings)
 
 *   **把 `social_login` 加入到 `INSTALLED_APPS` 中**
 
@@ -52,22 +53,20 @@ pip install django-social-login
     
 *   **'social_login.context_processors.social_sites'**
 
-    把它加入到 **`TEMPLATE_CONTEXT_PROCESSORS`** 中，
+    把它加入到 **TEMPLATE_CONTEXT_PROCESSORS** 中，
     并且在 views 中传递了 `context_instance`，
     那么在模板中就可以通过 `{% for s in social_sites %}` 的形式在获得配置的站点信息
     
-    ```python
-    s.site_id       在 SOCIALOAUTH_SITES 中配置的 site_id
-    s.site_name     站点的 英文名字
-    s.site_name_zh  中文名字
-    s.authorize_url 引导用户授权的url
-    ```
+        s.site_id       在 SOCIALOAUTH_SITES 中配置的 site_id
+        s.site_name     站点的 英文名字
+        s.site_name_zh  中文名字
+        s.authorize_url 引导用户授权的url
         
     
     
 *   **'social_login.middleware.SocialLoginUser'**
 
-    把它加入到 **`MIDDLEWARE_CLASSES`** 中，
+    把它加入到 **MIDDLEWARE_CLASSES** 中，
     这样在每个 view 的 `request` 对象会有一个 `siteuser` 属性
     
     如果设置了 siteuser.is_active = False，那么此用户是无法登录的,
@@ -78,36 +77,17 @@ pip install django-social-login
     
     可以通过一下方法访问其属性：
     
-    ```python
-    request.siteuser.id                     用户uid
-    request.siteuser.is_social              是否是第三方帐号
-    request.siteuser.date_joined            用户加入时间
-    request.siteuser.user_info.XX           用户信息表中的XX列
-    
-    request.siteuser.inner_user.XX          XX是定义在自身网站用户登录认证表中的field
-    
-    # if request.siteuser.is_social is True
-    request.siteuser.social_user.site_uid   用户第三方站点中的uid
-    request.siteuser.social_user.site_id    用户来自哪个网站的site_id
-    ```
-    
-    
-    
-*   **Other settings**
-
-    在你存储用户 登录/认证 信息的表中 设置 `objects`
-    
-    例子：
-    
-    ```python
-    from social_login.manager import InnerUserManager
-    
-    class UserAuth(models.Model):
-        email = models.EmailField(unique=True)
-        password = models.CharField(max_length=64)
+        request.siteuser.id                     用户uid
+        request.siteuser.is_social              是否是第三方帐号
+        request.siteuser.date_joined            用户加入时间
+        request.siteuser.user_info.XX           用户信息表中的XX列
         
-        objects = InnerUserManager()
-    ```
+        request.siteuser.inner_user.XX          XX是定义在自身网站用户登录认证表中的field
+        
+        # if request.siteuser.is_social is True
+        request.siteuser.social_user.site_uid   用户第三方站点中的uid
+        request.siteuser.social_user.site_id    用户来自哪个网站的site_id
+    
     
     
 ### models.py
@@ -133,18 +113,21 @@ class UserInfo(AbstractUserInfo):
 ```
 
 对于 `AbstractInnerUserAuth` 和 `AbstractUserInfo` 的定义可以直接看
-[源码](/blob/master/social_login/abstract_models.py)
+[源码](blob/master/social_login/abstract_models.py)
     
     
-此外，你还可以扩展 siteuser 表，只要自己定义的表 继承自
+此外，你还可以 **扩展** siteuser 表，只要自己定义的表 继承自
 `social_login.abstract_models.AbstractBaseSiteUser` 并且 设置了 `abstract = True`
 ，然后在 settings.py 加入
-`SOCIAL_LOGIN_ABSTRACT_SITEUSER = 'yourapp.YourCustomAbstractSiteUser'`
+`SOCIAL_LOGIN_ABSTRACT_SITEUSER = 'yourapp.YourCustomAbstractSiteUser'` 即可
+可以参考 [example/app/models.py](blob/master/example/app/models.py)
+最下面注释掉的部分
     
     
     
     
-经过上面的设置后， `python manage.py validate` 无错误就 `python manage.py runserver`.
+经过上面的设置后， `python manage.py validate` 无错误就 `python manage.py syncdb`,
+`python manage.py runserver`.
 如果有错，请确保正确安装，并且正确设置。完整的例子请参考 `example`
     
     
@@ -201,7 +184,7 @@ class UserInfo(AbstractUserInfo):
     
 #### SOCIAL_LOGIN_SITEUSER_SELECT_RELATED
 
-一个siteuser对象三个 关联关系，（三个关联表）
+一个siteuser对象有三个 关联关系，（三个关联表）
 
 *   inner_user  - 网站自身注册用户
 *   social_user - 第三方帐号
