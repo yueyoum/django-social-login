@@ -2,7 +2,7 @@
 
 from django.conf import settings
 
-# the following two are REQUIRED in django.conf.settings
+# the following three are REQUIRED in django.conf.settings
 SOCIALOAUTH_SITES = settings.SOCIALOAUTH_SITES
 SOCIAL_LOGIN_USER_INFO_MODEL = settings.SOCIAL_LOGIN_USER_INFO_MODEL
 SOCIAL_LOGIN_ERROR_REDIRECT_URL = settings.SOCIAL_LOGIN_ERROR_REDIRECT_URL
