@@ -113,14 +113,14 @@ class UserInfo(AbstractUserInfo):
 ```
 
 对于 `AbstractInnerUserAuth` 和 `AbstractUserInfo` 的定义可以直接看
-[源码](blob/master/social_login/abstract_models.py)
+[源码](social_login/abstract_models.py)
     
     
 此外，你还可以 **扩展** siteuser 表，只要自己定义的表 继承自
 `social_login.abstract_models.AbstractBaseSiteUser` 并且 设置了 `abstract = True`
 ，然后在 settings.py 加入
 `SOCIAL_LOGIN_ABSTRACT_SITEUSER = 'yourapp.YourCustomAbstractSiteUser'` 即可
-可以参考 [example/app/models.py](blob/master/example/app/models.py)
+可以参考 [example/app/models.py](example/app/models.py)
 最下面注释掉的部分
     
     
@@ -148,7 +148,7 @@ class UserInfo(AbstractUserInfo):
     
     图中显示了登录过的用户信息，注意 uid为 5 和 6 的用户，
     他们来自不同的网站，但用户名却相同。
-    所以在上面的设置中 `username` 不能设置为 `unique=True`
+    所以在userinfo表中的 `username` 不能设置为 `unique=True`
     
     ![status][3]
     
