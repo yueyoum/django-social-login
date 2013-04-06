@@ -185,6 +185,7 @@ LOGGING = {
 SOCIAL_LOGIN_USER_INFO_MODEL = 'app.UserInfo'
 SOCIAL_LOGIN_ERROR_REDIRECT_URL = '/account/login/error'
 #SOCIAL_LOGIN_SITEUSER_SELECT_RELATED = ('user_info', 'social_user', 'inner_user')
+#SOCIAL_LOGIN_ABSTARCT_SITEUSER = 'yourapp.YourCustomAbstractSiteUser'
 
 try:
     from local_settings import *
