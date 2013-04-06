@@ -38,7 +38,7 @@ def social_login_callback(request, sitename):
     user_info_model = get_model(*SOCIAL_LOGIN_USER_INFO_MODEL.split('.'))
     try:
         user = SocialUser.objects.get(site_uid=s.uid, site_id=s.site_id)
-        # got user, update it's username and avatar
+        #got user, update username and avatar
         user_info_model.objects.filter(user_id=user.user_id).update(
             username=s.name, avatar=s.avatar
         )
@@ -51,7 +51,7 @@ def social_login_callback(request, sitename):
             avatar=s.avatar
         )
         
-    # set uid in session, then next time, this user will auto loggin
+    # set uid in session, then next time, this user will be auto loggin
     request.session['uid'] = user.user_id
     
     # done

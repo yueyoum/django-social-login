@@ -2,8 +2,7 @@
 from django.db import models
 from django.conf import settings
 
-from .app_settings import SOCIAL_LOGIN_UID_LENGTH, SOCIAL_LOGIN_USER_INFO_MODEL
-#from .manager import SocialUserManager, InnerUserManager
+from .app_settings import SOCIAL_LOGIN_UID_LENGTH
 
 
 class BaseManager(models.Manager):
@@ -69,23 +68,6 @@ class SiteUser(_abstract_siteuser()):
     
     def __unicode__(self):
         return '<SiteUser %d>' % self.id
-    
-    
-    #@property
-    #def user_info_model(self):
-    #    return models.get_model(*SOCIAL_LOGIN_USER_INFO_MODEL.split('.'))
-    #
-    #@property
-    #def info(self):
-    #    return self.user_info_model.get(id=self.id)
-    #
-    #
-    #def info_list(self, *args):
-    #    info = self.user_info_model.objects.filter(id=self.id)[0:1].values_list(*args)
-    #    return info[0] if info else info
-    #
-    #def get_social_info(self):
-    #    return SocialUser.objects.get(id=self.id)
 
 
 
@@ -99,10 +81,11 @@ class SocialUser(models.Model):
     
     class Meta:
         unique_together = (('site_uid', 'site_id'),)
-        
 
 
 
+
+# your project's user model must inherit from the following two abstarct model
 
 class AbstractInnerUserAuth(models.Model):
     user = models.OneToOneField(SiteUser, related_name='inner_user')
